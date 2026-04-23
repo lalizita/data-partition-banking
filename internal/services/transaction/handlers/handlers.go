@@ -31,7 +31,7 @@ func (h *Handler) CreateCreditTransaction(c echo.Context) error {
 	var req model.CreateTransactionRequest
 	if err := c.Bind(&req); err != nil {
 		slog.Error("Create transaction failed", slog.Any("error", err))
-		return c.JSON(http.StatusInternalServerError, []byte(`{"message": "failed to bind request"}`))
+		return c.JSON(http.StatusInternalServerError, echo.Map{"message": "failed to bind request"})
 	}
 
 	tx := model.Transaction{
@@ -42,9 +42,9 @@ func (h *Handler) CreateCreditTransaction(c echo.Context) error {
 
 	if err := h.TransactionService.CreateTransaction(c.Request().Context(), tx); err != nil {
 		slog.Error("Create transaction failed", slog.Any("error", err))
-		return c.JSON(http.StatusInternalServerError, []byte(`{"message": "failed to create transaction"}`))
+		return c.JSON(http.StatusInternalServerError, echo.Map{"message": "failed to create transaction"})
 	}
 
 	slog.Info("transaction created successfully")
-	return c.JSON(http.StatusCreated, []byte(`{"message": "transaction created successfully"}`))
+	return c.JSON(http.StatusCreated, echo.Map{"message": "transaction created successfully"})
 }
